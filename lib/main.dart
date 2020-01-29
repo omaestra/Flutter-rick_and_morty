@@ -1,9 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/screens/characters/characterDetails.dart';
 
 import 'screens/characters/characters.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  
+  runApp(CupertinoApp(
+    home: MyApp(),
+    routes: <String, WidgetBuilder> {
+       '/character': (BuildContext context) => CharacterDetails(),
+    }
+  )); 
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

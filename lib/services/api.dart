@@ -3,11 +3,19 @@ import 'package:rick_and_morty/services/network.dart';
 const String apiURL = 'https://rickandmortyapi.com/api';
 
 class RickAndMortyAPI {
-  Future<dynamic> getCharacters() async {
-    Network network = Network('$apiURL/character');
+  Future<dynamic> getCharacters({int page}) async {
+    Network network = Network(page == null ? '$apiURL/character' : '$apiURL/character?page=$page');
 
-    var data = await network.getData();
+    final data = await network.getData();
     
+    return data;
+  }
+
+  Future<dynamic> searchCharacter({String searchTerms}) async {
+    Network network = Network('$apiURL/character?name=$searchTerms');
+
+    final data = await network.getData();
+
     return data;
   }
 }

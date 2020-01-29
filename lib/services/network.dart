@@ -8,6 +8,7 @@ class Network {
   Future getData() async {
     print('Calling uri: $url');
 
+
     Response response = await get(url);
 
     if (response.statusCode == 200) {
