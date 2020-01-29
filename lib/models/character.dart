@@ -28,6 +28,7 @@ class Character {
   final Location location;
   final String created;
   final String image;
+  final List<String> episodes;
 
   Character({
     this.id,
@@ -40,6 +41,7 @@ class Character {
     this.location,
     this.created,
     this.image,
+    this.episodes,
   });
 
   Map<String, dynamic> toJson() => {
@@ -53,6 +55,7 @@ class Character {
         'location': location,
         'created': created,
         'image': image,
+        'episodes': episodes,
       };
 
   factory Character.fromJson(Map<String, dynamic> json) {
@@ -67,6 +70,7 @@ class Character {
       location: json['location'] != null ? Location.fromJson(json['location']) : null,
       created: json['created'] as String,
       image: json['image'] as String,
+      episodes: json['episode'].cast<String>(),
     );
   }
 }

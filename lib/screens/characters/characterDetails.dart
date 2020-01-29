@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/models/character.dart';
+import 'package:rick_and_morty/screens/episodes/episodesPage.dart';
 
 class CharacterDetails extends StatelessWidget {
   final Character character;
@@ -61,9 +62,12 @@ class CharacterDetails extends StatelessWidget {
               Navigator.push(
                   context,
                   CupertinoPageRoute(
-                      builder: (context) => CharacterDetails(
-                            character: character,
-                          ),
+                      builder: (context) => EpisodesPage(
+                        
+                        episodesIds: character.episodes.toList().map((f) {
+                          return f.split("/").last;
+                        }).toList()
+                      ),
                       fullscreenDialog: true));
             },
           ),

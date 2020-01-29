@@ -18,4 +18,12 @@ class RickAndMortyAPI {
 
     return data;
   }
+
+  Future<dynamic> getMultipleEpisodes({List<String> episodesIds}) async {
+    Network network = Network('$apiURL/episode/$episodesIds');
+
+    final data = await network.getData();
+
+    return data;
+  }
 }
