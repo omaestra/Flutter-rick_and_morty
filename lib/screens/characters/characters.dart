@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/models/api_response.dart';
 import 'package:rick_and_morty/models/character.dart';
-import 'package:rick_and_morty/services/api.dart';
+import 'package:rick_and_morty/services/characterService.dart';
 import 'package:rick_and_morty/widgets/searchBar.dart';
 import 'characterRowItem.dart';
 
@@ -33,7 +33,8 @@ class _CharactersState extends State<Characters> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     loadCharacters();
-    _textEditingController = TextEditingController()..addListener(_onTextChanged);
+    _textEditingController = TextEditingController()
+      ..addListener(_onTextChanged);
     _focusNode = FocusNode();
   }
 
@@ -58,7 +59,7 @@ class _CharactersState extends State<Characters> {
         itemCount: results.length,
         itemBuilder: (context, index) {
           if (index == results.length - 1) {
-            return _buildProgressIndicator(); 
+            return _buildProgressIndicator();
           } else {
             return CharacterRowItem(
               index: index,
@@ -76,13 +77,14 @@ class _CharactersState extends State<Characters> {
       this.isLoading = true;
     });
 
-    var result = await RickAndMortyAPI().getCharacters();
-    setState(() {
-      this.characters = [];
-    });
+    var result = await CharacterService().getCharacters();
+    final characters = result.results
+        .map<Character>((json) => Character.fromJson(json))
+        .toList();
+
     setState(() {
       this.isLoading = false;
-      this.characters = parseCharacters(result);
+      this.characters = characters;
     });
   }
 
@@ -93,8 +95,10 @@ class _CharactersState extends State<Characters> {
       });
 
       final page = this.page + 1;
-      final result = await RickAndMortyAPI().getCharacters(page: page);
-      final characters = parseCharacters(result);
+      final result = await CharacterService().getCharacters(page: page);
+      final characters = result.results
+          .map<Character>((json) => Character.fromJson(json))
+          .toList();
 
       setState(() {
         this.page = page;
@@ -108,19 +112,19 @@ class _CharactersState extends State<Characters> {
 
   void searchCharacter(String searchTerms) async {
     if (searchTerms.isEmpty) {
-        setState(() {
-          this.filteredCharacters = this.characters;
-          this.isSearching = false;
-        });
-      } else {
-        final result =
-            await RickAndMortyAPI().searchCharacter(searchTerms: searchTerms);
-
-        setState(() {
-          this.filteredCharacters = result != null ? parseCharacters(result) : [];
-          this.isSearching = true;
-        });
-      }
+      setState(() {
+        this.filteredCharacters = this.characters;
+        this.isSearching = false;
+      });
+    } else {
+      final characters =
+          await CharacterService().searchCharacter(searchTerms: searchTerms);
+      
+      setState(() {
+        this.filteredCharacters = characters;
+        this.isSearching = true;
+      });
+    }
   }
 
   // A function that converts a response body into a List<Character>.

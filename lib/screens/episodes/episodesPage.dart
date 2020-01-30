@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/models/episode.dart';
-import 'package:rick_and_morty/services/api.dart';
 
 class EpisodesPage extends StatefulWidget {
   final List<String> episodesIds;
@@ -40,14 +39,14 @@ class _EpisodesPageState extends State<EpisodesPage> {
   }
 
   loadEpisodes(List<String> idList) async {
-    final result =
-        await RickAndMortyAPI().getMultipleEpisodes(episodesIds: idList);
+    // final result =
+    //     await RickAndMortyAPI().getMultipleEpisodes(episodesIds: idList);
 
-    final episodes = parseEpisodes(result);
+    // final episodes = parseEpisodes(result);
 
-    setState(() {
-      this.episodes = episodes;
-    });
+    // setState(() {
+    //   this.episodes = episodes;
+    // });
   }
 
   List<Episode> parseEpisodes(String responseBody) {

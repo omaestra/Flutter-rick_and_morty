@@ -1,6 +1,6 @@
-class ApiResponse {
+class ApiResponse<T> {
   Info info;
-  List<dynamic> results;
+  List<T> results;
 
   ApiResponse({this.info, this.results});
 

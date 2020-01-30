@@ -1,29 +1,42 @@
-import 'package:rick_and_morty/services/network.dart';
-
-const String apiURL = 'https://rickandmortyapi.com/api';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:rick_and_morty/utilities/exceptions.dart';
 
 class RickAndMortyAPI {
-  Future<dynamic> getCharacters({int page}) async {
-    Network network = Network(page == null ? '$apiURL/character' : '$apiURL/character?page=$page');
+  final String apiURL = 'https://rickandmortyapi.com/api';
 
-    final data = await network.getData();
-    
-    return data;
+  Future<dynamic> get(String url) async {
+    var responseJson;
+
+    print("[INFO]: GET REQUEST to URL: $url");
+    try {
+      final response = await http.get(apiURL + url);
+
+      responseJson = _response(response);
+    } on SocketException {
+      throw Exception('No Internet connection');
+    }
+    return responseJson;
   }
 
-  Future<dynamic> searchCharacter({String searchTerms}) async {
-    Network network = Network('$apiURL/character?name=$searchTerms');
+  dynamic _response(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        var responseJson = json.decode(response.body.toString());
+        print("[INFO]: GET RESPONSE to URL: ${response.statusCode}");
+        return responseJson;
+      case 400:
+        throw BadRequestException(response.body.toString());
+      case 401:
 
-    final data = await network.getData();
+      case 403:
+        throw UnauthorisedException(response.body.toString());
+      case 500:
 
-    return data;
-  }
-
-  Future<dynamic> getMultipleEpisodes({List<String> episodesIds}) async {
-    Network network = Network('$apiURL/episode/$episodesIds');
-
-    final data = await network.getData();
-
-    return data;
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
   }
 }
